@@ -24,6 +24,7 @@ class DBStorage:
         HBNB_MYSQL_HOST = getenv('HBNB_MYSQL_HOST')
         HBNB_MYSQL_DB = getenv('HBNB_MYSQL_DB')
         HBNB_ENV = getenv('HBNB_ENV')
+
         self.__engine = create_engine(
             'mysql+mysqldb://{}:{}@{}/{}'
             .format(
@@ -56,19 +57,19 @@ class DBStorage:
 
     def delete(self, obj=None):
         """Delete from the current database session obj if not None"""
-        if obj is not None:
+        if obj != None:
             self.__session.delete(obj)
 
     def reload(self):
         """Reloads data from the database"""
         Base.metadata.create_all(self.__engine)
-        sess_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
-        Session = scoped_session(sess_factory)
+        session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        Session = scoped_session(session_factory)
         self.__session = Session
 
     def close(self):
         """Call remove() method on the private session attribute"""
-        self.__session.close()
+        self.__session.remove()
 
 
 classes = {"User": User,
