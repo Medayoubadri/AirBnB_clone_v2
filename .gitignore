@@ -1,0 +1,49 @@
+# Python bytecode files
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Virtual environment
+env/
+venv/
+ENV/
+.venv/
+.env
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# PyCharm specific
+.idea/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# mypy
+.mypy_cache/
+
+# Pytest cache
+.cache/
+
+# Coverage
+.coverage
+*.coveragerc
+
+# Pylint
+.pylint.d/
+
+# logs
+*.log
+
+# OS-specific
+.DS_Store
+Thumbs.db
