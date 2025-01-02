@@ -132,8 +132,8 @@ class HBNBCommand(cmd.Cmd):
             if "=" not in param:
                 continue
             key, value = param.split('=', 1)
-            value = value.strip('"')  # Remove surrounding quotes
-            value = value.replace('_', ' ')  # Replace underscores with spaces
+            value = value.strip('"')
+            value = value.replace('_', ' ')
 
             # Type casting
             if value.replace('.', '', 1).isdigit():
