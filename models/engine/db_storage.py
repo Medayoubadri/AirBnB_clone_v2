@@ -3,7 +3,7 @@
 from os import getenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
-from models.base_model import Base
+from models.base_model import Base, BaseModel
 from models.user import User
 from models.place import Place
 from models.state import State
@@ -14,22 +14,21 @@ from models.review import Review
 
 class DBStorage:
     """This class manages storage of hbnb models in a SQL database"""
-
     __engine = None
     __session = None
 
     def __init__(self):
         """Instantiate a DBStorage object"""
-        HBNB_MYSQL_USER = getenv("HBNB_MYSQL_USER")
-        HBNB_MYSQL_PWD = getenv("HBNB_MYSQL_PWD")
-        HBNB_MYSQL_HOST = getenv("HBNB_MYSQL_HOST")
-        HBNB_MYSQL_DB = getenv("HBNB_MYSQL_DB")
-        HBNB_ENV = getenv("HBNB_ENV")
+        HBNB_MYSQL_USER = getenv('HBNB_MYSQL_USER')
+        HBNB_MYSQL_PWD = getenv('HBNB_MYSQL_PWD')
+        HBNB_MYSQL_HOST = getenv('HBNB_MYSQL_HOST')
+        HBNB_MYSQL_DB = getenv('HBNB_MYSQL_DB')
+        HBNB_ENV = getenv('HBNB_ENV')
         self.__engine = create_engine(
-            "mysql+mysqldb://{}:{}@{}/{}".format(
+            'mysql+mysqldb://{}:{}@{}/{}'
+            .format(
                 HBNB_MYSQL_USER, HBNB_MYSQL_PWD, HBNB_MYSQL_HOST, HBNB_MYSQL_DB
-            )
-        )
+                ))
         if HBNB_ENV == "test":
             Base.metadata.drop_all(self.__engine)
 
@@ -40,9 +39,9 @@ class DBStorage:
             if cls is None or cls is classes[clss] or cls is clss:
                 objs = self.__session.query(classes[clss]).all()
                 for obj in objs:
-                    key = obj.__class__.__name__ + "." + obj.id
+                    key = obj.__class__.__name__ + '.' + obj.id
                     new_dict[key] = obj
-        return new_dict
+        return (new_dict)
 
     def new(self, obj):
         """Add the object to the current database session"""
@@ -69,12 +68,9 @@ class DBStorage:
         self.__session.remove()
 
 
-# Create a dictionary of all the classes
-classes = {
-    "User": User,
-    "Place": Place,
-    "State": State,
-    "City": City,
-    "Amenity": Amenity,
-    "Review": Review,
-}
+classes = {"User": User,
+           "Place": Place,
+           "State": State,
+           "City": City,
+           "Amenity": Amenity,
+           "Review": Review}
