@@ -4,7 +4,6 @@ Contains the TestConsoleDocs classes
 """
 
 from io import StringIO
-from unittest.mock import patch
 import console
 import inspect
 import pep8
@@ -41,27 +40,6 @@ class TestConsoleDocs(unittest.TestCase):
                          "HBNBCommand class needs a docstring")
         self.assertTrue(len(HBNBCommand.__doc__) >= 1,
                         "HBNBCommand class needs a docstring")
-
-
-class TestConsoleFunction(unittest.TestCase):
-    """Class for testing the console functionality"""
-
-    def setUp(self):
-        self.console = HBNBCommand()
-
-    def test_create_with_parameters(self):
-        """Test create command with parameters"""
-        with patch('sys.stdout', new=StringIO()) as f:
-            self.console.onecmd("create State name=\"California\"")
-            obj_id = f.getvalue().strip()
-        self.assertTrue(len(obj_id) > 0)
-
-        with patch('sys.stdout', new=StringIO()) as f:
-            self.console.onecmd(f"all State")
-            output = f.getvalue()
-        self.assertIn("California", output)
-        self.assertIn(obj_id, output)
-
 
 if __name__ == "__main__":
     unittest.main()

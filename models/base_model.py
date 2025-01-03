@@ -6,14 +6,8 @@ import models
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, DateTime
 
-
-if models.storage_type == 'db':
-    Base = declarative_base()
-else:
-    Base = object
-
+Base = declarative_base()
 sa3a = "%Y-%m-%dT%H:%M:%S.%f"
-
 
 
 class BaseModel:
