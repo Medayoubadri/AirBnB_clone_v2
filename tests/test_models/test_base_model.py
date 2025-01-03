@@ -14,10 +14,7 @@ class test_basemodel(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         """
         Initializes an instance of the test class.
-
-        Sets the name and value attributes of the class instance.
         """
-        """"""
         super().__init__(*args, **kwargs)
         self.name = 'BaseModel'
         self.value = BaseModel
@@ -25,8 +22,6 @@ class test_basemodel(unittest.TestCase):
     def setUp(self):
         """
         Sets up test environment.
-
-        Deletes any existing 'file.json' file from previous runs.
         """
         pass
 
