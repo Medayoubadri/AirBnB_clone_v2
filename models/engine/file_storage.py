@@ -16,7 +16,7 @@ classes = {
     "State": State,
     "City": City,
     "Amenity": Amenity,
-    "Review": Review,}
+    "Review": Review, }
 
 
 class FileStorage:
