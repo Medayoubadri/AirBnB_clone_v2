@@ -8,7 +8,7 @@ class test_Amenity(test_basemodel):
     """ Tests for Amenity class """
 
     def __init__(self, *args, **kwargs):
-        
+
         """
         Initializes an instance of test_Amenity
 
@@ -25,7 +25,7 @@ class test_Amenity(test_basemodel):
         self.value = Amenity
 
     def test_name2(self):
-        
+
         """Checks that Amenity has a name attribute which is a string"""
         new = self.value()
         self.assertEqual(type(new.name), str)
