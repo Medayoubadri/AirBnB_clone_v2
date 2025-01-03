@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" """
+"""Unittest for base model"""
 from models.base_model import BaseModel
 import unittest
 import datetime
@@ -9,31 +9,45 @@ import os
 
 
 class test_basemodel(unittest.TestCase):
-    """ """
+    """ Test cases for BaseModel class """
 
     def __init__(self, *args, **kwargs):
-        """ """
+        """
+        Initializes an instance of the test class.
+
+        Sets the name and value attributes of the class instance.
+        """
+        """"""
         super().__init__(*args, **kwargs)
         self.name = 'BaseModel'
         self.value = BaseModel
 
     def setUp(self):
-        """ """
+        """
+        Sets up test environment.
+
+        Deletes any existing 'file.json' file from previous runs.
+        """
         pass
 
     def tearDown(self):
+        """ Remove storage file at end of tests """
         try:
             os.remove('file.json')
         except Exception:
             pass
 
     def test_default(self):
-        """ """
+        """Test default value"""
         i = self.value()
         self.assertEqual(type(i), self.value)
 
     def test_kwargs(self):
-        """ """
+        """
+        Creates an instance of the class using the to_dict method.
+        Then it asserts that the two instances are not the same.
+        """
+        """"""
         i = self.value()
         copy = i.to_dict()
         new = BaseModel(**copy)
