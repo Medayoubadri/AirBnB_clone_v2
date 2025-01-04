@@ -41,7 +41,7 @@ class DBStorage:
         """query on the current database session"""
         new_dict = {}
         for clss in classes:
-            if cls is None or cls is classes[clss] or cls is clss:
+            if cls is None or cls is classes[clss] or cls.__name__ == clss:
                 objs = self.__session.query(classes[clss]).all()
                 for obj in objs:
                     key = obj.__class__.__name__ + '.' + obj.id
@@ -62,16 +62,16 @@ class DBStorage:
             self.__session.delete(obj)
 
     def reload(self):
-        """Reloads data from the database"""
+        """reloads data from the database"""
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(
-                  bind=self.__engine, expire_on_commit=False)
+            bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session_factory)
-        self.__session = Session
+        self.__session = Session()
 
     def close(self):
         """call remove() method on the private session attribute"""
-        self.__session.remove()
+        self.__session.close()
 
 
 classes = {
