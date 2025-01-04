@@ -80,7 +80,7 @@ class Test_State(unittest.TestCase):
         self.assertIsInstance(new_d, dict)
         self.assertNotIn("_sa_instance_state", new_d)
         for attr in stat.__dict__:
-            if attr is not "_sa_instance_state":
+            if attr != "_sa_instance_state":
                 self.assertIn(attr, new_d)
         self.assertIn("__class__", new_d)
 
