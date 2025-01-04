@@ -173,8 +173,9 @@ class Test_Console(unittest.TestCase):
             self.assertIn("California", output_str)
             self.assertIn("39538223", output_str)
 
-        from models import storage
+        from models.engine.file_storage import FileStorage
         from models.state import State
+        storage = FileStorage()
         all_states = storage.all(State)
         self.assertTrue(
             any("California" in str(obj) for obj in all_states.values()))
