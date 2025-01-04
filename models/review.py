@@ -1,5 +1,5 @@
 #!/usr/bin/python
-""" holds class Review"""
+"""This module defines a Review class"""
 import models
 from models.base_model import BaseModel, Base
 from os import getenv

@@ -2,3 +2,4 @@ mysqlclient
 SQLAlchemy
 pycodestyle
 python-dotenv
+pep8

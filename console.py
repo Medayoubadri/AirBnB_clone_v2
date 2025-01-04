@@ -133,6 +133,7 @@ class HBNBCommand(cmd.Cmd):
                 elif '.' in value and value.replace('.', '').isdigit():
                     value = float(value)
                 setattr(new_instance, key, value)
+        storage.new(new_instance)
         storage.save()
         print(new_instance.id)
 
