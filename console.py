@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 """ Console Module """
 import cmd
+import shlex
 import sys
 from models.base_model import BaseModel
-from models.__init__ import storage
+import models
 from models.user import User
 from models.place import Place
 from models.state import State
@@ -104,7 +105,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
         new_instance = HBNBCommand.classes[args.split()[0]]()
-        params = args.split()[1:]
+        params = args.split()
         for param in params:
             if "=" in param:
                 key, value = param.split('=')
@@ -115,8 +116,8 @@ class HBNBCommand(cmd.Cmd):
                 elif '.' in value and value.replace('.', '').isdigit():
                     value = float(value)
                 setattr(new_instance, key, value)
-        storage.new(new_instance)
-        storage.save()
+        models.storage.new(new_instance)
+        models.storage.save()
         print(new_instance.id)
 
     def help_create(self):
@@ -147,7 +148,7 @@ class HBNBCommand(cmd.Cmd):
 
         key = c_name + "." + c_id
         try:
-            print(storage._FileStorage__objects[key])
+            print(models.storage._FileStorage__objects[key])
         except KeyError:
             print("** no instance found **")
 
@@ -179,8 +180,8 @@ class HBNBCommand(cmd.Cmd):
         key = c_name + "." + c_id
 
         try:
-            del (storage.all()[key])
-            storage.save()
+            del (models.storage.all()[key])
+            models.storage.save()
         except KeyError:
             print("** no instance found **")
 
@@ -189,23 +190,22 @@ class HBNBCommand(cmd.Cmd):
         print("Destroys an individual instance of a class")
         print("[Usage]: destroy <className> <objectId>\n")
 
-    def do_all(self, args):
-        """ Shows all objects, or all objects of a class"""
-        print_list = []
-
-        if args:
-            args = args.split(' ')[0]
-            if args not in HBNBCommand.classes:
-                print("** class doesn't exist **")
-                return
-            for k, v in storage._FileStorage__objects.items():
-                if k.split('.')[0] == args:
-                    print_list.append(str(v))
+    def do_all(self, arg):
+        """Prints string representations of instances"""
+        args = shlex.split(arg)
+        obj_list = []
+        if len(args) == 0:
+            obj_dict = models.storage.all()
+        elif args[0] in HBNBCommand.classes:
+            obj_dict = models.storage.all(HBNBCommand.classes[args[0]])
         else:
-            for k, v in storage._FileStorage__objects.items():
-                print_list.append(str(v))
-
-        print(print_list)
+            print("** class doesn't exist **")
+            return False
+        for key in obj_dict:
+            obj_list.append(str(obj_dict[key]))
+        print("[", end="")
+        print(", ".join(obj_list), end="")
+        print("]")
 
     def help_all(self):
         """ Help information for the all command """
@@ -215,7 +215,7 @@ class HBNBCommand(cmd.Cmd):
     def do_count(self, args):
         """Count current number of class instances"""
         count = 0
-        for k, v in storage._FileStorage__objects.items():
+        for k, v in models.storage._FileStorage__objects.items():
             if args == k.split('.')[0]:
                 count += 1
         print(count)
@@ -247,7 +247,7 @@ class HBNBCommand(cmd.Cmd):
 
         key = c_name + "." + c_id
 
-        if key not in storage.all():
+        if key not in models.storage.all():
             print("** no instance found **")
             return
 
@@ -276,7 +276,7 @@ class HBNBCommand(cmd.Cmd):
 
             args = [att_name, att_val]
 
-        new_dict = storage.all()[key]
+        new_dict = models.storage.all()[key]
 
         for i, att_name in enumerate(args):
             if (i % 2 == 0):
