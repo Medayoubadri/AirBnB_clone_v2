@@ -2,20 +2,9 @@
   <img src="/assets/HBNB.png" alt="AirBnb Clone">
 </p>
 
-# AirBnB Clone - Command Interpreter
+# AirBnB Clone - MySQL
 
-This is the first phase of the **AirBnB Clone** project. The goal of this phase is to implement a command-line interpreter that manages data for our AirBnB clone project. This console serves as the entry point to our application and is capable of:
-
-- Creating new objects (e.g., users, places, etc.).
-- Retrieving objects from storage.
-- Performing operations like updating or deleting objects.
-- Interfacing with a persistent file storage system.
-
----
-
-## Description of the Command Interpreter
-
-The command interpreter (console) is a shell-like tool used to interact with our application. It allows users to perform CRUD (Create, Read, Update, Delete) operations on objects, as well as other tasks, through textual commands.
+This project is an extension of the AirBnB clone, integrating MySQL database storage and adding new features.
 
 ---
 
@@ -24,8 +13,8 @@ The command interpreter (console) is a shell-like tool used to interact with our
 1. Clone this repository:
 
    ```bash
-   git clone https://github.com/medayoubadri/AirBnB_clone.git
-   cd AirBnB_clone
+   git clone https://github.com/medayoubadri/AirBnB_clone_v2.git
+   cd AirBnB_clone_v2
    ```
 
 2. Start the console:
@@ -36,67 +25,64 @@ The command interpreter (console) is a shell-like tool used to interact with our
 
 ---
 
-### How to Use It
+## How to Use
 
-Once the console starts, you will see the `(hbnb)` prompt. From here, you can type commands to interact with the application.
+1. Set up your MySQL database using the provided scripts.
+2. Set the necessary environment variables.
+3. Run the console or specific test commands as shown in the task descriptions.
 
-#### Available Commands
+For more detailed information on each task, please refer to the project documentation.
 
-- `help` - Displays help for available commands.
-- `quit` - Exits the console.
-- `EOF` - Exits the console (Ctrl+D).
-- `create <class name>` - Creates a new instance of the specified class and prints its ID.
-- `show <class name> <id>` - Displays an instance based on class name and ID.
-- `destroy <class name> <id>` - Deletes an instance based on class name and ID.
-- `all [<class name>]` - Displays all instances or all instances of a specific class.
-- `update <class name> <id> <attribute name> <attribute value>` - Updates an instance with a new attribute.
-- `<class name>.all()` - Retrieves all instances of a class.
-- `<class name>.count()` - Counts the number of instances of a class.
-- `<class name>.show("<id>")` - Displays an instance based on ID.
-- `<class name>.destroy("<id>")` - Deletes an instance based on ID.
-- `<class name>.update("<id>", <attribute name>, <attribute value>)` - Updates an instance.
-- `<class name>.update("<id>", <dictionary>)` - Updates multiple attributes of an instance.
+## Environment Variables
+
+- `HBNB_ENV`: running environment. It can be "dev" or "test"
+- `HBNB_MYSQL_USER`: the username of your MySQL
+- `HBNB_MYSQL_PWD`: the password of your MySQL
+- `HBNB_MYSQL_HOST`: the hostname of your MySQL
+- `HBNB_MYSQL_DB`: the database name of your MySQL
+- `HBNB_TYPE_STORAGE`: the type of storage used. It can be "file" (using FileStorage) or "db" (using DBStorage)
 
 ---
 
-### Examples
+### New Features and Tasks
 
-1. **Create a new User:**
+1. **Fork me if you can!**
+   - Update the repository name to AirBnB_clone_v2
+   - Update the README.md with your information
 
-   ```bash
-   (hbnb) create User
-   1234-5678
-   ```
+2. **Bug free!**
+   - Ensure all unittests pass without errors
+   - Test command: `python3 -m unittest discover tests`
 
-2. **Show a User:**
+3. **Console improvements**
+   - Update `do_create` function to allow object creation with parameters
+   - Test command: `echo 'create State name="California"' | ./console.py`
 
-   ```bash
-   (hbnb) show User 1234-5678
-   [User] (1234-5678) {<User details>}
-   ```
+4. **MySQL setup development**
+   - Create a script to set up MySQL for development
+   - Test command: `cat setup_mysql_dev.sql | mysql -hlocalhost -uroot -p`
 
-3. **Update a User:**
+5. **MySQL setup test**
+   - Create a script to set up MySQL for testing
+   - Test command: `cat setup_mysql_test.sql | mysql -hlocalhost -uroot -p`
 
-   ```bash
-   (hbnb) update User 1234-5678 name "John"
-   ```
+6. **DBStorage - States and Cities**
+   - Implement DBStorage engine using SQLAlchemy
+   - Update BaseModel, State, and City classes
+   - Test command: `HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db ./console.py`
 
-4. **Delete a User:**
+7. **DBStorage - User**
+   - Update User class to work with DBStorage
+   - Test command: `echo 'create User email="gui@hbtn.io" password="guipwd" first_name="Guillaume" last_name="Snow"' | HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db ./console.py`
 
-   ```bash
-   (hbnb) destroy User 1234-5678
-   ```
+8. **DBStorage - Place**
+   - Update Place, User, and City classes for DBStorage
+   - Test command: `echo 'create Place city_id="..." user_id="..." name="My_house"' | HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db ./console.py`
 
-5. **Count Instances:**
+9. **DBStorage - Review**
+   - Update Review, User, and Place classes for DBStorage
+   - Test command: `echo 'create Review place_id="..." user_id="..." text="Great_place"' | HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db ./console.py`
 
-   ```bash
-   (hbnb) User.count()
-   2
-   ```
-
-6. **Display All Instances:**
-
-   ```bash
-   (hbnb) all
-   [[User] (1234-5678) {<User details>}, ...]
-   ```
+10. **DBStorage - Amenity... and BOOM!**
+    - Update Amenity and Place classes, implementing Many-to-Many relationship
+    - Test command: `HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db ./main_place_amenities.py`
