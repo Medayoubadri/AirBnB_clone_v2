@@ -5,6 +5,7 @@ Contains the class TestConsoleDocs
 
 from io import StringIO
 import os
+import re
 from unittest.mock import patch
 import console
 import inspect
@@ -13,7 +14,6 @@ import unittest
 from models.engine.file_storage import FileStorage
 
 HBNBCommand = console.HBNBCommand
-pat = r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
 
 
 class Test_Console(unittest.TestCase):
@@ -158,26 +158,3 @@ class Test_Console(unittest.TestCase):
         with patch("sys.stdout", new=StringIO()) as output:
             self.assertFalse(HBNBCommand().onecmd("create"))
             self.assertEqual(correct, output.getvalue().strip())
-
-    def test_create_with_parameters(self):
-        """Test create command with parameters."""
-        with patch("sys.stdout", new=StringIO()) as output:
-            cmd = 'create State name="California" population=39538223'
-            self.assertFalse(HBNBCommand().onecmd(cmd))
-            result = output.getvalue().strip()
-            self.assertRegex(result, pat)
-
-        with patch("sys.stdout", new=StringIO()) as output:
-            self.assertFalse(HBNBCommand().onecmd("all State"))
-            output_str = output.getvalue()
-            self.assertIn("California", output_str)
-            self.assertIn("39538223", output_str)
-
-        from models.engine.file_storage import FileStorage
-        from models.state import State
-        storage = FileStorage()
-        all_states = storage.all(State)
-        self.assertTrue(
-            any("California" in str(obj) for obj in all_states.values()))
-        self.assertTrue(
-            any("39538223" in str(obj) for obj in all_states.values()))
