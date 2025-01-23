@@ -1,4 +1,4 @@
-#!/home/ayoubadri/root/alx/AirBnB_clone_v2/.venv/bin/python3
+#!/usr/bin/python3
 """
 Fabric script that distributes an archive to the web servers
 """
