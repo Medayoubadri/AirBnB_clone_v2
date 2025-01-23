@@ -5,7 +5,7 @@ Fabric script that distributes an archive to the web servers
 
 from fabric.api import env, put, run
 from os.path import exists
-
+import os
 
 env.hosts = ['34.224.63.237', '52.86.3.5']
 
@@ -16,8 +16,7 @@ def do_deploy(archive_path):
         return False
 
     try:
-
-        file_name = archive_path.split("/")[-1]
+        file_name = os.path.basename(archive_path)
         folder_name = file_name.split(".")[0]
         path = "/data/web_static/releases/"
 
