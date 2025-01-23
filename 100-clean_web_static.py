@@ -24,10 +24,10 @@ def do_clean(number=0):
         archives = sorted(run('ls -tr').split())
         archives = [a for a in archives if a.startswith('web_static_')]
         for archive in archives[:-number or -1]:
-            run(f'rm -rf {archive}')
+            run('rm -rf {}'.format(archive))
 
     with cd('versions'):
         archives = sorted(local('ls -tr', capture=True).split())
         archives = [a for a in archives if a.startswith('web_static_')]
         for archive in archives[:-number or -1]:
-            local(f'rm -rf {archive}')
+            local('rm -rf {}'.format(archive))
