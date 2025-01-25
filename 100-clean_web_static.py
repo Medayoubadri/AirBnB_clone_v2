@@ -3,7 +3,7 @@
 Fabric script that deletes out-of-date archives
 """
 
-from fabric.api import env, cd, local, run
+from fabric.api import env, cd, lcd, local, run
 import os
 
 env.hosts = ['34.224.63.237', '52.86.3.5']
@@ -17,20 +17,15 @@ def do_clean(number=0):
         If number is 0 or 1, keeps only the most recent archive.
         If number is 2, keeps the most and second most recent archives, etc.
     """
-    number = int(number)
-    if number < 0:
-        return
+    number = 1 if int(number) == 0 else int(number)
 
-    local_path = os.path.join(os.path.dirname(__file__), 'versions')
-    if os.path.isdir(local_path):
-        with cd(local_path):
-            archives = sorted(local('ls -t').split())
-            [local('rm -rf {}'.format(a)) for a in archives[number:]
-             if a.startswith('web_static_')]
+    archives = sorted(os.listdir("versions"))
+    [archives.pop() for i in range(number)]
+    with lcd("versions"):
+        [local("rm ./{}".format(a)) for a in archives]
 
-    with cd('/data/web_static/releases'):
-        archives = sorted(run('ls -t').split())
-        [run('rm -rf {}'.format(a)) for a in archives[number:]
-         if a.startswith('web_static_')]
-
-    print(len(archives[:number] if number > 0 else archives[:1]))
+    with cd("/data/web_static/releases"):
+        archives = run("ls -tr").split()
+        archives = [a for a in archives if "web_static_" in a]
+        [archives.pop() for i in range(number)]
+        [run("rm -rf ./{}".format(a)) for a in archives]
