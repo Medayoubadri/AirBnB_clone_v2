@@ -2,34 +2,43 @@
 
 # Install Nginx
 package { 'nginx':
-  ensure => installed,
+  ensure   => 'present',
+  provider => 'apt',
 }
 
-# Create necessary directories
-file { ['/data', '/data/web_static', '/data/web_static/releases', '/data/web_static/shared', '/data/web_static/releases/test']:
-  ensure => 'directory',
-  owner  => 'ubuntu',
-  group  => 'ubuntu',
-  mode   => '0755',
+file { '/data':
+  ensure  => 'directory'
 }
-
-# Create a fake HTML file
+file { '/data/web_static':
+  require => File['/data'],
+}
+file { '/data/web_static/releases':
+  require => File['/data/web_static'],
+}
+file { '/data/web_static/shared':
+  require => File['/data/web_static/releases'],
+}
+file { '/data/web_static/releases/test':
+  require => File['/data/web_static/shared'],
+}
+file { '/data/web_static/releases/test/index.html':
+  require => File['/data/web_static/releases/test'],
+}
+file { '/data/web_static/releases/test':
+}
+file { '/data/web_static/current':
+  require => File['/data/web_static/releases/test/index.html'],
+}
 file { '/data/web_static/releases/test/index.html':
   ensure  => 'file',
-  content => "<html>\n  <head>\n  </head>\n  <body>\n    ALX\n  </body>\n</html>\n",
-  owner   => 'ubuntu',
-  group   => 'ubuntu',
-  mode    => '0644',
+  content => "<html>\n  <head>\n  </head>\n  <body>\n    ALX\n  </body>\n</html>\n"
 }
-
-# Create or recreate symbolic link
 file { '/data/web_static/current':
   ensure => 'link',
   target => '/data/web_static/releases/test',
-  force  => true,
+  force  => true
 }
 
-# Update Nginx configuration
 file_line { 'nginx_configuration':
   path   => '/etc/nginx/sites-available/default',
   after  => 'server_name _;',
@@ -37,7 +46,6 @@ file_line { 'nginx_configuration':
   notify => Service['nginx'],
 }
 
-# Restart Nginx
 service { 'nginx':
   ensure  => running,
   enable  => true,
