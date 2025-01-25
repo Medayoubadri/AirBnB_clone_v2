@@ -31,14 +31,15 @@ file { '/data/web_static/current':
 
 # Update Nginx configuration
 file_line { 'nginx_configuration':
-  path  => '/etc/nginx/sites-available/default',
-  after => 'server_name _;',
-  line  => "\n\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n",
+  path   => '/etc/nginx/sites-available/default',
+  after  => 'server_name _;',
+  line   => "\n\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n",
+  notify => Service['nginx'],
 }
 
 # Restart Nginx
 service { 'nginx':
-  ensure    => running,
-  enable    => true,
-  subscribe => File_line['nginx_configuration'],
+  ensure  => running,
+  enable  => true,
+  require => File_line['nginx_configuration'],
 }
