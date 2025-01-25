@@ -17,7 +17,9 @@ def do_clean(number=0):
         If number is 0 or 1, keeps only the most recent archive.
         If number is 2, keeps the most and second most recent archives, etc.
     """
-    number = 1 if int(number) == 0 else int(number)
+    number = int(number)
+    if number <= 0:
+        number = 1
 
     local_path = "versions"
     if os.path.isdir(local_path):
