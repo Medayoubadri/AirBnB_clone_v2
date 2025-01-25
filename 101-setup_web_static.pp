@@ -1,53 +1,88 @@
-# Puppet manifest to set up web servers for deployment of web_static
+# Configures a web server for deployment of web_static.
 
-# Install Nginx
+# Nginx configuration file
+$nginx_conf = "server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    add_header X-Served-By ${hostname};
+    root   /etc/nginx/html;
+    index  index.html index.htm;
+    location /hbnb_static {
+        alias /data/web_static/current;
+        index index.html index.htm;
+    }
+    location /redirect_me {
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+    }
+    error_page 404 /404.html;
+    location /404 {
+      root /etc/nginx/html;
+      internal;
+    }
+}"
+
 package { 'nginx':
   ensure   => 'present',
-  provider => 'apt',
-}
+  provider => 'apt'
+} ->
 
 file { '/data':
   ensure  => 'directory'
-}
+} ->
+
 file { '/data/web_static':
-  require => File['/data'],
-}
+  ensure => 'directory'
+} ->
+
 file { '/data/web_static/releases':
-  require => File['/data/web_static'],
-}
+  ensure => 'directory'
+} ->
+
+file { '/data/web_static/releases/test':
+  ensure => 'directory'
+} ->
+
 file { '/data/web_static/shared':
-  require => File['/data/web_static/releases'],
-}
-file { '/data/web_static/releases/test':
-  require => File['/data/web_static/shared'],
-}
+  ensure => 'directory'
+} ->
+
 file { '/data/web_static/releases/test/index.html':
-  require => File['/data/web_static/releases/test'],
-}
-file { '/data/web_static/releases/test':
-}
-file { '/data/web_static/current':
-  require => File['/data/web_static/releases/test/index.html'],
-}
-file { '/data/web_static/releases/test/index.html':
-  ensure  => 'file',
-  content => "<html>\n  <head>\n  </head>\n  <body>\n    ALX\n  </body>\n</html>\n"
-}
+  ensure  => 'present',
+  content => "ALX \n"
+} ->
+
 file { '/data/web_static/current':
   ensure => 'link',
-  target => '/data/web_static/releases/test',
-  force  => true
+  target => '/data/web_static/releases/test'
+} ->
+
+exec { 'chown -R ubuntu:ubuntu /data/':
+  path => '/usr/bin/:/usr/local/bin/:/bin/'
 }
 
-file_line { 'nginx_configuration':
-  path   => '/etc/nginx/sites-available/default',
-  after  => 'server_name _;',
-  line   => "\n\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n",
-  notify => Service['nginx'],
-}
+file { '/etc/nginx':
+  ensure => 'directory'
+} ->
 
-service { 'nginx':
-  ensure  => running,
-  enable  => true,
-  require => File_line['nginx_configuration'],
+file { '/etc/nginx/html':
+  ensure => 'directory'
+} ->
+
+file { '/etc/nginx/html/index.html':
+  ensure  => 'present',
+  content => "Holberton School Nginx\n"
+} ->
+
+file { '/etc/nginx/html/404.html':
+  ensure  => 'present',
+  content => "Ceci n'est pas une page\n"
+} ->
+
+file { '/etc/nginx/sites-available/default':
+  ensure  => 'present',
+  content => $nginx_conf
+} ->
+
+exec { 'nginx restart':
+  path => '/etc/init.d/'
 }
