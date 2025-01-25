@@ -7,7 +7,6 @@ from fabric.api import env, local, put, run
 from datetime import datetime
 from os.path import exists, isdir
 
-
 env.hosts = ['34.224.63.237', '52.86.3.5']
 
 
@@ -34,7 +33,7 @@ def do_deploy(archive_path):
         folder_name = file_name.split(".")[0]
         path = "/data/web_static/releases/"
 
-        put(archive_path, "/tmp/{}".format(file_name))
+        put(archive_path, "/tmp/")
         run("mkdir -p {}{}".format(path, folder_name))
         run("tar -xzf /tmp/{} -C {}{}".format(file_name, path, folder_name))
         run("rm /tmp/{}".format(file_name))
