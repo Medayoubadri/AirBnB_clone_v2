@@ -3,13 +3,13 @@
 Fabric script that creates and distributes an archive to the web servers
 """
 
-from fabric.api import env, local, put, run
+from fabric.api import env, local, put, run, runs_once
 from datetime import datetime
 from os.path import exists, isdir
 
 env.hosts = ['34.224.63.237', '52.86.3.5']
 
-
+@runs_once
 def do_pack():
     """Generates a .tgz archive from the contents of the web_static folder"""
     try:
@@ -53,3 +53,7 @@ def deploy():
     if archive_path is None:
         return False
     return do_deploy(archive_path)
+
+
+if __name__ == "__main__":
+    deploy()

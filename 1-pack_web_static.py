@@ -17,9 +17,9 @@ def do_pack():
         local("mkdir -p versions")
 
         current_time = time.strftime("%Y%m%d%H%M%S")
-        output = "versions/web_static_{}.tgz".format(current_time)
+        output = f"versions/web_static_{current_time}.tgz"
 
-        local("tar -cvzf {} web_static".format(output))
+        local(f"tar -cvzf {output} web_static")
 
         return output
     except Exception:
