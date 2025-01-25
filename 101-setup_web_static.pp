@@ -70,7 +70,7 @@ file { '/etc/nginx/html':
 
 file { '/etc/nginx/html/index.html':
   ensure  => 'present',
-  content => "Holberton School Nginx\n"
+  content => "ALX \n"
 } ->
 
 file { '/etc/nginx/html/404.html':
