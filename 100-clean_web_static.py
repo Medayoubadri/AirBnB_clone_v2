@@ -18,18 +18,19 @@ def do_clean(number=0):
         If number is 2, keeps the most and second most recent archives, etc.
     """
     number = int(number)
-    if number <= 0:
+    if number < 1:
         number = 1
 
     local_path = "versions"
     if os.path.isdir(local_path):
         with lcd(local_path):
             archives = sorted(local("ls -1t", capture=True).split())
-            archives_to_delete = archives[number:]
-            for archive in archives_to_delete:
-                local(f"rm -f {archive}")
+            [local(f"rm -f {archive}") for archive in archives[number:]]
 
     with cd("/data/web_static/releases"):
         archives = run("ls -tr").split()
-        archives = [a for a in archives if "web_static_" in a]
-        [run(f"rm -rf {a}") for a in archives[:(len(archives) - number)]]
+        archives = [a for a in archives if a.startswith("web_static_")]
+        if len(archives) > number:
+            archives_to_delete = archives[:-number]
+            for archive in archives_to_delete:
+                run(f"rm -rf {archive}")
