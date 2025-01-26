@@ -3,7 +3,7 @@
 Fabric script that deletes out-of-date archives
 """
 
-from fabric.api import env, cd, lcd, local, run
+from fabric.api import env, lcd, cd, local, run
 import os
 
 env.hosts = ['34.224.63.237', '52.86.3.5']
@@ -21,16 +21,15 @@ def do_clean(number=0):
     if number < 1:
         number = 1
 
-    local_path = "versions"
-    if os.path.isdir(local_path):
-        with lcd(local_path):
-            archives = sorted(local("ls -1t", capture=True).split())
-            [local(f"rm -f {archive}") for archive in archives[number:]]
+    with lcd("versions"):
+        archives = local("ls -1t", capture=True).split()
+        to_delete = archives[number:]
+        for archive in to_delete:
+            local(f"rm -f {archive}")
 
     with cd("/data/web_static/releases"):
-        archives = run("ls -tr").split()
-        archives = [a for a in archives if a.startswith("web_static_")]
-        if len(archives) > number:
-            archives_to_delete = archives[:-number]
-            for archive in archives_to_delete:
-                run(f"rm -rf {archive}")
+        archives = run("ls -1t").split()
+        web_static_archives = [a for a in archives if a.startswith("web_static_")]
+        to_delete = web_static_archives[number:]
+        for archive in to_delete:
+            run(f"rm -rf {archive}")
