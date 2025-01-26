@@ -20,18 +20,17 @@ def do_clean(number=0):
     number = int(number)
     if number < 0:
         return False
-    if number == 0:
-        number = 1
+    number = max(1, number) if number == 0 else number + 1
 
     local_archives = local('ls -1t versions', capture=True).split()
-    to_delete_local = local_archives[number:]
-    for archive in to_delete_local:
-        local(f'rm versions/{archive}')
+    for archive in local_archives[number:]:
+        local(f'rm -rf versions/{archive}')
 
     releases_path = '/data/web_static/releases'
-    remote_archives = run(f'ls -1t {releases_path} | grep web_static').split()
-    to_delete_remote = remote_archives[number:]
-    for archive in to_delete_remote:
+    remote_archives = run(f'ls -1t {releases_path}').split()
+    web_static_dirs = [d for d in remote_archives
+                       if d.startswith('web_static_')]
+    for archive in web_static_dirs[number:]:
         run(f'rm -rf {releases_path}/{archive}')
 
     return True
