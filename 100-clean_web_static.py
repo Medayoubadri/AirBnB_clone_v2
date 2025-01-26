@@ -20,16 +20,12 @@ def do_clean(number=0):
     number = int(number)
     if number < 1:
         number = 1
-
-    with lcd("versions"):
-        archives = local("ls -1t", capture=True).split()
-        to_delete = archives[number:]
-        for archive in to_delete:
-            local(f"rm -f {archive}")
-
-    with cd("/data/web_static/releases"):
-        archives = run("ls -1t").split()
-        web_static_archives = [a for a in archives if a.startswith("web_static_")]
-        to_delete = web_static_archives[number:]
-        for archive in to_delete:
-            run(f"rm -rf {archive}")
+    
+    # Local cleanup
+    local("ls -1t versions | tail -n +{} | xargs -I {{}} rm versions/{{}}".format(
+        number + 1))
+    
+    # Remote cleanup
+    path = "/data/web_static/releases"
+    run("ls -1t {} | grep web_static | tail -n +{} | xargs -I {{}} rm -rf {}/{{}}".format(
+        path, number + 1, path))
