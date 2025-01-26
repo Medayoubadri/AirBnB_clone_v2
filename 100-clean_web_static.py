@@ -18,14 +18,20 @@ def do_clean(number=0):
         If number is 2, keeps the most and second most recent archives, etc.
     """
     number = int(number)
-    if number < 1:
+    if number < 0:
+        return False
+    if number == 0:
         number = 1
-    
-    # Local cleanup
-    local("ls -1t versions | tail -n +{} | xargs -I {{}} rm versions/{{}}".format(
-        number + 1))
-    
-    # Remote cleanup
-    path = "/data/web_static/releases"
-    run("ls -1t {} | grep web_static | tail -n +{} | xargs -I {{}} rm -rf {}/{{}}".format(
-        path, number + 1, path))
+
+    local_archives = local('ls -1t versions', capture=True).split()
+    to_delete_local = local_archives[number:]
+    for archive in to_delete_local:
+        local(f'rm versions/{archive}')
+
+    releases_path = '/data/web_static/releases'
+    remote_archives = run(f'ls -1t {releases_path} | grep web_static').split()
+    to_delete_remote = remote_archives[number:]
+    for archive in to_delete_remote:
+        run(f'rm -rf {releases_path}/{archive}')
+
+    return True
