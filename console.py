@@ -1,4 +1,4 @@
-#!/home/ayoubadri/root/alx/AirBnB_clone_v2/.venv/bin/python3
+#!/usr/bin/python3
 """ Console Module """
 import cmd
 import shlex
