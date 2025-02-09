@@ -5,6 +5,7 @@ from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from os import getenv
 
+
 class State(BaseModel, Base):
     __tablename__ = 'states'
     name = Column(String(128), nullable=False)
@@ -17,5 +18,5 @@ class State(BaseModel, Base):
             """getter for list of city instances related to the state"""
             from models import storage
             from models.city import City
-            return [city for city in storage.all(City).values() 
+            return [city for city in storage.all(City).values()
                     if city.state_id == self.id]
