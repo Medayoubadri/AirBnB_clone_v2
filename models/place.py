@@ -5,26 +5,6 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, Integer, Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
 
-if models.storage_type == 'db':
-    place_amenity = Table(
-        'place_amenity', Base.metadata,
-        Column(
-            'place_id',
-            String(60),
-            ForeignKey(
-                'places.id',
-                onupdate='CASCADE',
-                ondelete='CASCADE'
-                ), primary_key=True),
-        Column(
-            'amenity_id',
-            String(60),
-            ForeignKey(
-                'amenities.id',
-                onupdate='CASCADE',
-                ondelete='CASCADE'
-                ), primary_key=True))
-
 
 class Place(BaseModel, Base):
     """Representation of Place """
@@ -56,10 +36,6 @@ class Place(BaseModel, Base):
         latitude = 0.0
         longitude = 0.0
         amenity_ids = []
-
-    def __init__(self, *args, **kwargs):
-        """initializes Place"""
-        super().__init__(*args, **kwargs)
 
     if models.storage_type != 'db':
         @property
