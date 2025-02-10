@@ -29,7 +29,7 @@ if models.storage_type == 'db':
 class Place(BaseModel, Base):
     """Representation of Place """
     __tablename__ = 'places'
-    
+
     if models.storage_type == 'db':
         city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
         user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
@@ -69,4 +69,3 @@ class Place(BaseModel, Base):
                 if review.place_id == self.id:
                     review_list.append(review)
             return review_list
-
