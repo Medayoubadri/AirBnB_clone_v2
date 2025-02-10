@@ -30,7 +30,6 @@ class Place(BaseModel, Base):
     """Representation of Place """
     if models.storage_type == 'db':
         __tablename__ = 'places'
-        id = Column(String(60), primary_key=True)
         city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
         user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
         name = Column(String(128), nullable=False)
@@ -57,6 +56,10 @@ class Place(BaseModel, Base):
         latitude = 0.0
         longitude = 0.0
         amenity_ids = []
+
+    def __init__(self, *args, **kwargs):
+        """initializes Place"""
+        super().__init__(*args, **kwargs)
 
     if models.storage_type != 'db':
         @property
