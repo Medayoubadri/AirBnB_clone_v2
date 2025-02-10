@@ -28,8 +28,9 @@ if models.storage_type == 'db':
 
 class Place(BaseModel, Base):
     """Representation of Place """
+    __tablename__ = 'places'
+    
     if models.storage_type == 'db':
-        __tablename__ = 'places'
         city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
         user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
         name = Column(String(128), nullable=False)
@@ -57,10 +58,6 @@ class Place(BaseModel, Base):
         longitude = 0.0
         amenity_ids = []
 
-    def __init__(self, *args, **kwargs):
-        """initializes Place"""
-        super().__init__(*args, **kwargs)
-
     if models.storage_type != 'db':
         @property
         def reviews(self):
@@ -73,13 +70,3 @@ class Place(BaseModel, Base):
                     review_list.append(review)
             return review_list
 
-        @property
-        def amenities(self):
-            """getter attribute returns the list of Amenity instances"""
-            from models.amenity import Amenity
-            amenity_list = []
-            all_amenities = models.storage.all(Amenity)
-            for amenity in all_amenities.values():
-                if amenity.place_id == self.id:
-                    amenity_list.append(amenity)
-            return amenity_list

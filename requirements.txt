@@ -3,3 +3,6 @@ SQLAlchemy
 pycodestyle
 python-dotenv
 pep8
+Flask
+Flask-Cors
+unittest2
